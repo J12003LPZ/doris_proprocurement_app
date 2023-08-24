@@ -1,0 +1,189 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container-fluid">
+  <div class="page-header">
+    <h1>Request ID</h1>
+    <a
+      class="btn btn-primary btn-small mb-3 mt-3"
+      href="{{ url_for('request.edit_request', request_id=request.id) }}"
+      >Edit Request</a
+    >
+    <!-- Button trigger modal -->
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#myModal"
+    >
+      View Comments
+    </button>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="table-responsive">
+          <table id="requests" class="table table-bordered table-striped">
+            <colgroup>
+              <col class="col-xs-2" />
+              <col class="col-xs-4" />
+            </colgroup>
+            <tbody id="request-table">
+              <tr>
+                <th scope="row" colspan="2">Request Information</th>
+              </tr>
+              <tr>
+                <th scope="row">Request ID:</th>
+                <td>{{ request.id }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Requester:</th>
+                <td>{{ request.creator_id }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Division:</th>
+                <td>{{ request.division }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Item:</th>
+                <td>{{ request.item }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Quantity:</th>
+                <td>{{ request.quantity }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Unit Price:</th>
+                <td>${{ request.unit_price }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Total Cost:</th>
+                <td>${{ request.total_cost }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Funding Source:</th>
+                <td>{{ request.funding_source }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Justification:</th>
+                <td>{{ request.justification }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Status:</th>
+                <td>
+                  {{ request.status }}
+                  <a
+                    class="btn btn-primary btn-sm pull-right text-white float-right"
+                    data-toggle="modal"
+                    data-target="#update_status"
+                    >Update</a
+                  >
+                </td>
+              </tr>
+
+              {% if request.funding_source == 'Grant' %}
+              <tr>
+                <th scope="row">Grant Name</th>
+                <td>{{ request.grant_name }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Project Name:</th>
+                <td>{{ request.project_name }}</td>
+              </tr>
+              {% elif request.funding_source == 'Other' %}
+              <tr>
+                <th scope="row">Funding Source Description</th>
+                <td>{{ request.funding_source_description }}</td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <colgroup>
+              <col class="col-xs-1" />
+              <col class="col-xs-5" />
+            </colgroup>
+            <tbody id="vendor-table">
+              <tr>
+                <th scope="row" colspan="2">Vendor Information</th>
+              </tr>
+              <tr>
+                <th scope="row">Name:</th>
+                <td>{{ vendor.name }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Address:</th>
+                <td>{{ vendor.address }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Phone:</th>
+                <td>{{ vendor.phone }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Fax:</th>
+                <td>{{ vendor.fax }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Email:</th>
+                <td>{{ vendor.email }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Tax ID:</th>
+                <td>{{ vendor.tax_id }}</td>
+              </tr>
+              <tr>
+                <th scope="row">M/WBE:</th>
+                <td>{{ '✅' if vendor.mwbe else '❌' }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <a class="btn btn-primary btn-small" href="#"
+            >Return to Request History</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="container-fluid"
+  style="display: inline-block; width: 100%; margin-top: 5px"
+>
+  <div class="form-group col">
+    <h3>Make a comment</h3>
+    <form
+      action="{{ url_for('request.submit_comment') }}"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <textarea
+        id="comment"
+        name="comment"
+        rows="5"
+        style="width: 40%"
+        maxlength="500"
+        class="form-control mb-3"
+      ></textarea>
+
+      <input type="file" id="file" name="file" class="mb-3" />
+
+      <!-- Hidden input field for 'request_id' -->
+      <input
+        type="hidden"
+        id="request_id"
+        name="request_id"
+        value="{{ request.id }}"
+      />
+
+      <div class="d-grid">
+        <button class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal -->
+{% include 'components/comments.html' %} {% endblock %}

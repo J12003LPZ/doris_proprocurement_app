@@ -1,0 +1,128 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container px-5 my-5 text-center">
+  <div class="container-fluid mb-5">
+    <h1 class="display-6">New Vendor</h1>
+  </div>
+</div>
+
+<div class="container">
+  <form action="{{ url_for('vendor.new_vendor') }}" method="post">
+    <div class="form-floating mb-3">
+      <input
+        class="form-control"
+        id="vendorName"
+        name="vendorName"
+        type="text"
+        placeholder="Vendor Name"
+        data-sb-validations="required"
+      />
+      <label for="vendorName">Vendor Name</label>
+      <div class="invalid-feedback" data-sb-feedback="vendorName:required">
+        Vendor Name is required.
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <input
+        class="form-control"
+        id="vendorAddress"
+        name="vendorAddress"
+        type="text"
+        placeholder="Vendor Address"
+        data-sb-validations="required"
+      />
+      <label for="vendorAddress">Vendor Address</label>
+      <div class="invalid-feedback" data-sb-feedback="vendorAddress:required">
+        Vendor Address is required.
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <input
+        class="form-control"
+        id="vendorPhone"
+        name="vendorPhone"
+        type="text"
+        placeholder="Vendor Phone"
+        data-sb-validations="required"
+      />
+      <label for="vendorPhone">Vendor Phone</label>
+      <div class="invalid-feedback" data-sb-feedback="vendorPhone:required">
+        Vendor Phone is required.
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <input
+        class="form-control"
+        id="vendorFax"
+        name="vendorFax"
+        type="text"
+        placeholder="Vendor Fax"
+        data-sb-validations="required"
+      />
+      <label for="vendorFax">Vendor Fax</label>
+      <div class="invalid-feedback" data-sb-feedback="vendorFax:required">
+        Vendor Fax is required.
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <input
+        class="form-control"
+        id="vendorEmail"
+        name="vendorEmail"
+        type="text"
+        placeholder="Vendor Email"
+        data-sb-validations="required"
+      />
+      <label for="vendorEmail">Vendor Email</label>
+      <div class="invalid-feedback" data-sb-feedback="vendorEmail:required">
+        Vendor Email is required.
+      </div>
+    </div>
+    <div class="form-floating mb-3">
+      <input
+        class="form-control"
+        id="vendorTaxId"
+        name="vendorTaxId"
+        type="text"
+        placeholder="Vendor/Tax ID"
+        data-sb-validations="required"
+      />
+      <label for="vendorTaxId">Vendor/Tax ID</label>
+      <div class="invalid-feedback" data-sb-feedback="vendorTaxId:required">
+        Vendor/Tax ID is required.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label d-block"></label>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          id="mWbe"
+          name="mWbe"
+          type="checkbox"
+          name=""
+          data-sb-validations=""
+        />
+        <label class="form-check-label" for="mWbe">M/WBE</label>
+      </div>
+    </div>
+
+    <div class="d-grid">
+      <button class="btn btn-primary btn-lg" id="submitButton" type="submit">
+        Submit
+      </button>
+    </div>
+
+    <div class="d-none" id="submitSuccessMessage">
+      <div class="text-center mb-3">
+        <div class="fw-bolder">Form submission successful!</div>
+        <p>To activate this form, sign up at</p>
+      </div>
+    </div>
+    <div class="d-none" id="submitErrorMessage">
+      <div class="text-center text-danger mb-3">Error sending message!</div>
+    </div>
+  </form>
+</div>
+
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+{% endblock %}

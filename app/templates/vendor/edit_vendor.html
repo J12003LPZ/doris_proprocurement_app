@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container">
+  <h1>Edit Vendor</h1>
+
+  <form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+      {{ form.vendorName.label }} {{ form.vendorName(class="form-control",
+      placeholder="Vendor Name", value=vendor.name) }}
+    </div>
+
+    <div class="form-group">
+      {{ form.vendorAddress.label }} {{ form.vendorAddress(class="form-control",
+      placeholder="Vendor Address", value=vendor.address) }}
+    </div>
+
+    <div class="form-group">
+      {{ form.vendorPhone.label }} {{ form.vendorPhone(class="form-control",
+      placeholder="Vendor Phone", value=vendor.phone) }}
+    </div>
+
+    <div class="form-group">
+      {{ form.vendorFax.label }} {{ form.vendorFax(class="form-control",
+      placeholder="Vendor Fax", value=vendor.fax) }}
+    </div>
+
+    <div class="form-group">
+      {{ form.vendorEmail.label }} {{ form.vendorEmail(class="form-control",
+      placeholder="Vendor Email", value=vendor.email) }}
+    </div>
+
+    <div class="form-group">
+      {{ form.vendorTaxId.label }} {{ form.vendorTaxId(class="form-control",
+      placeholder="Vendor Tax ID", value=vendor.tax_id) }}
+    </div>
+
+    <div class="form-check">
+      {% if vendor.mwbe %} {{ form.mWbe(class="form-check-input",
+      checked="checked") }} {% else %} {{ form.mWbe(class="form-check-input") }}
+      {% endif %} {{ form.mWbe.label }}
+    </div>
+
+    <div class="form-group">{{ form.submit(class="btn btn-primary") }}</div>
+  </form>
+</div>
+
+{% endblock %}

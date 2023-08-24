@@ -1,0 +1,229 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container px-5 my-5">
+  <div class="container-fluid mb-5">
+    <h1 class="display-6">
+      Edit Request <i class="fa-solid fa-cart-shopping"></i>
+    </h1>
+    <h1 class="h3">Date: {{ current_date }}</h1>
+    <h1 class="h3">Requester name: {{ current_username }}</h1>
+    <h1 class="h3">Division: {{ current_division }}</h1>
+  </div>
+  <form action="/edit_request/{{ req.id }}" method="post" id="requestForm">
+    {{ form.hidden_tag() }}
+
+    <!-- Item -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          {{ form.item.label }} {{ form.item(class="form-control",
+          style="height: 10rem", maxlength="500", autofocus=True) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Quantity -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          {{ form.quantity.label }} {{ form.quantity(class="form-control") }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Unit Price -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          {{ form.unit_price.label }} {{ form.unit_price(class="form-control")
+          }}
+        </div>
+      </div>
+
+      <!-- Total Cost -->
+      <div class="col-md-6">
+        <div class="form-group">
+          {{ form.total_cost.label }} {{ form.total_cost(class="form-control")
+          }}
+          <p>Please include all additional costs, i.e, S&H</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Funding Source -->
+    <div class="form-group">
+      {{ form.funding_source.label(id="fundingSourceLabel") }} {{
+      form.funding_source(class="form-control", id="fundingSource") }}
+    </div>
+
+    <!-- Justification -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          {{ form.justification.label }} {{
+          form.justification(class="form-control", style="height: 10rem",
+          maxlength="500") }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Grant Name -->
+    <div class="form-group" id="grantName" style="display: none">
+      {{ form.grant_name.label }} {{ form.grant_name(class="form-control") }}
+    </div>
+
+    <!-- Project Name -->
+    <div class="form-group" id="projectName" style="display: none">
+      {{ form.project_name.label }} {{ form.project_name(class="form-control")
+      }}
+    </div>
+
+    <!-- Funding Source Description -->
+    <div class="form-group" id="fundingSourceDescription" style="display: none">
+      {{ form.funding_source_description.label }} {{
+      form.funding_source_description(class="form-control") }}
+    </div>
+
+    <!-- Vendor fields -->
+    {{ form.request_vendor_dropdown(class="form-control", id="vendor") }}
+
+    <!-- Vendor Name -->
+    <div class="form-group">
+      {{ form.request_vendor_name.label }} {{
+      form.request_vendor_name(class="form-control", value=vendor.name,
+      id="vendorName", readonly=True) }}
+    </div>
+
+    <!-- Vendor Address -->
+    <div class="form-group">
+      {{ form.request_vendor_address.label }} {{
+      form.request_vendor_address(class="form-control", value=vendor.address,
+      id="vendorAddress" , readonly=True) }}
+    </div>
+
+    <!-- Vendor Phone -->
+    <div class="form-group">
+      {{ form.request_vendor_phone.label }} {{
+      form.request_vendor_phone(class="form-control", value=vendor.phone,
+      id="vendorPhone", readonly=True) }}
+    </div>
+
+    <!-- Vendor Fax -->
+    <div class="form-group">
+      {{ form.request_vendor_fax.label }} {{
+      form.request_vendor_fax(class="form-control", value=vendor.fax,
+      id="vendorFax", readonly=True) }}
+    </div>
+
+    <!-- Vendor Email -->
+    <div class="form-group">
+      {{ form.request_vendor_email.label }} {{
+      form.request_vendor_email(class="form-control", value=vendor.email,
+      id="vendorEmail", readonly=True) }}
+    </div>
+
+    <!-- Vendor/Tax ID -->
+    <div class="form-group">
+      {{ form.request_vendor_taxid.label }} {{
+      form.request_vendor_taxid(class="form-control", value=vendor.tax_id,
+      id="vendorTaxId", readonly=True) }}
+    </div>
+
+    <!-- M/WBE -->
+    <div class="mb-3">
+      <div class="form-check form-check-inline">
+        {% if vendor.mwbe %} {{
+        form.request_vendor_mwbe(class="form-check-input", checked="checked",
+        id="mWbe", readonly=True, onclick="return false;") }} {% else %} {{
+        form.request_vendor_mwbe(class="form-check-input", id="mWbe",
+        readonly=True, onclick="return false;") }} {% endif %}
+
+        <label class="form-check-label" for="mWbe">M/WBE</label>
+      </div>
+    </div>
+
+    <div class="d-grid">
+      <button class="btn btn-primary btn-lg" id="submitButton" type="submit">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Debugging: Display form validation errors -->
+{% for field, errors in form.errors.items() %} {% for error in errors %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endfor %} {% endfor %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    function toggleFields() {
+      var fundingSource = $("#fundingSource").val();
+      if (fundingSource === "Grant") {
+        $("#grantName").show();
+        $("#projectName").show();
+        $("#fundingSourceDescription").hide();
+      } else if (fundingSource === "Other") {
+        $("#fundingSourceDescription").show();
+        $("#grantName").hide();
+        $("#projectName").hide();
+      } else {
+        $("#fundingSourceDescription").hide();
+        $("#grantName").hide();
+        $("#projectName").hide();
+      }
+    }
+
+    // Call toggleFields on page load
+    toggleFields();
+
+    // Call toggleFields whenever the value of fundingSource changes
+    $("#fundingSource").change(function () {
+      toggleFields();
+    });
+  });
+
+  $(document).ready(function () {
+    $("#vendor").change(function () {
+      var vendorId = $(this).val();
+      if (vendorId && vendorId !== "none") {
+        $.ajax({
+          url: "/get_vendor/" + vendorId,
+          type: "GET",
+          success: function (data) {
+            // Populate the vendor fields with the returned data
+            $("#vendorName").val(data.name);
+            $("#vendorAddress").val(data.address);
+            $("#vendorPhone").val(data.phone);
+            $("#vendorFax").val(data.fax);
+            $("#vendorEmail").val(data.email);
+            $("#vendorTaxId").val(data.tax_id);
+            $("#mWbe").prop("checked", data.mwbe);
+
+            // Disable the vendor fields
+            $("#vendorName").prop("disabled", true);
+            $("#vendorAddress").prop("disabled", true);
+            $("#vendorPhone").prop("disabled", true);
+            $("#vendorFax").prop("disabled", true);
+            $("#vendorEmail").prop("disabled", true);
+            $("#vendorTaxId").prop("disabled", true);
+            $("#mWbe").prop("disabled", true);
+          },
+        });
+      } else {
+        // Enable the vendor fields and clear any existing values
+        $("#vendorName").prop("disabled", false).val("");
+        $("#vendorAddress").prop("disabled", false).val("");
+        $("#vendorPhone").prop("disabled", false).val("");
+        $("#vendorFax").prop("disabled", false).val("");
+        $("#vendorEmail").prop("disabled", false).val("");
+        $("#vendorTaxId").prop("disabled", false).val("");
+        $("#mWbe").prop("disabled", false).prop("checked", false);
+      }
+    });
+  });
+</script>
+{% endblock %}

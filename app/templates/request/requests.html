@@ -1,0 +1,108 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container mt-5">
+  <div class="container-fluid mb-3">
+    <h1 class="display-4">Request History</h1>
+  </div>
+
+  <div class="input-group mb-1">
+    <input
+      class="form-control"
+      id="myInput"
+      type="text"
+      placeholder="Search.."
+    />
+  </div>
+
+  <div class="table-responsive-sm mt-5">
+    <table class="table table-bordered table-striped" id="myTable">
+      <thead>
+        <tr>
+          <th>Request#</th>
+          <th>Date Submmitted</th>
+          <th>Division</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Total Cost</th>
+          <th>Edit</th>
+          <th>View</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for request in requests.items %}
+        <tr>
+          <th scope="row">{{ request.id }}</th>
+          <td>{{ request.date_submitted }}</td>
+          <td>{{ request.division }}</td>
+          <td>{{ request.item | truncate_by_words(10) }}</td>
+          <!-- use item as description -->
+          <td>{{ request.status }}</td>
+          <td>${{ request.total_cost }}</td>
+          <td>
+            <a
+              class="btn btn-primary btn-sm"
+              href="{{ url_for('request.edit_request', request_id=request.id) }}"
+            >
+              <i class="fas fa-edit"></i>Edit Request</a
+            >
+          </td>
+          <td>
+            <a
+              href="{{ url_for('request.view_request', request_id=request.id) }}"
+              class="btn btn-success btn-sm"
+            >
+              <i class="fas fa-eye"></i> View Request
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      {% if requests.has_prev %}
+      <a
+        class="btn btn-outline-info"
+        href="{{ url_for('request.home', page=requests.prev_num) }}"
+        >Previous</a
+      >
+      {% endif %} {% if requests.has_next %}
+      <a
+        class="btn btn-outline-info"
+        href="{{ url_for('request.home', page=requests.next_num) }}"
+        >Next</a
+      >
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    function myFunction() {
+      var input, filter, table, tr, td, i, j, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        for (j = 0; j < td.length; j++) {
+          if (td[j]) {
+            txtValue = td[j].textContent || td[j].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+              break;
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+    }
+
+    document.getElementById("myInput").addEventListener("keyup", myFunction);
+  });
+</script>
+{% endblock %}
